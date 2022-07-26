@@ -1,4 +1,9 @@
 ﻿<style type="text/css">
+    body {
+        width: 100px;
+        height: 100px;
+    }
+
     #container {
         filter: url(#threshold) blur(0.1px);
     }
@@ -8,6 +13,7 @@
     }
 
 </style>
+<head></head>
 <body>
     <!--<div id="container">
         <span id="text1"></span>
@@ -29,13 +35,13 @@
         </defs>
     </svg>
 
-    <input type="range" min="0" max="5" value="1" step="0.1" class="slider" id="myRange" oninput="setMorphForce(value);" style="
+    <!--<input type="range" min="0" max="5" value="1" step="0.1" class="slider" id="myRange" oninput="setMorphForce(value);" style="
     width: 100%;
     height: 15px;
     "><input type="range" min="0" max="5" value="1" step="0.1" class="slider" id="myRange" oninput="setMinBlur(value);" style="
     width: 100%;
     height: 15px;
-    ">
+    ">-->
 </body>
 <script>
     const container = document.getElementById('container');
@@ -51,6 +57,11 @@
     const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v))
     function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
+
+    window.addEventListener('message', event => {
+        eval(event.data);
+    });
+
     { start: String; end: String } function setTextNotAnimated(value) {
         text.start.textContent = value;
         text.end.textContent = value;
@@ -64,10 +75,11 @@
         }
         text.start.textContent = value;
     }
-
     function setMinBlur(value = 0.1) { container.style.filter = `url(#threshold) blur(${value}px)`; }
-    function setMorphForce(value) { morphForce = value; }
 
+    function setMorphSmooth(fraction, time, step = 10) {
+
+    }
     function setMorph(fraction) {
         text.end.style.filter = `blur(${Math.min((8 * morphForce) / fraction - (8 * morphForce), 100)}px)`;
         text.end.style.opacity = `${Math.pow(fraction, 0.4 * morphForce) * 100}%`;
@@ -78,14 +90,17 @@
     }
 
 
-    setTextNotAnimated('Start text');
-    (async () => {
-        for (var i = 0; i < 1000; i++) {
-            await setTextAnimated('new text!)', 1000);
-            await sleep(1000);
-            await setTextAnimated('wery new text!!!', 1000);
-            await sleep(1000);
-        }
-        return;
-    })();
+    //setTextNotAnimated('A');
+    //(async () => {
+    //    await sleep(100);
+    //    //alert(parent.window.frames[window.name].name);
+
+    //    for (var i = 0; i < 1000; i++) {
+    //        await setTextAnimated('B', 1000);
+    //        await sleep(1000);
+    //        await setTextAnimated('A', 1000);
+    //        await sleep(1000);
+    //    }
+    //    return;
+    //})();
 </script>
