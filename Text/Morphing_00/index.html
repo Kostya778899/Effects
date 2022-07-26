@@ -45,13 +45,28 @@
 <script>
     var text = { start: document.getElementById("text1"), end: document.getElementById("text2")};
 
-    { start: String; end: String } function setText(start, end) {
-        text.start.textContent = start;
-        text.end.textContent = end;
+
+    const lerp = (x, y, a) => x * (1 - a) + y * a
+    const invlerp = (a, b, v) => clamp((v - a) / (b - a))
+    const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v))
+    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    { start: String; end: String } function setTextNotAnimated(value) {
+        text.start.textContent = value;
+        text.end.textContent = value;
+    }
+    { value: String; } async function setTextAnimated(value, time, step = 10) {
+        text.end.textContent = value;
+
+        for (var i = 0.; i < time; i += step) {
+            setMorph(invlerp(0., time, i));
+            await sleep(step);
+        }
+        text.start.textContent = value;
     }
 
     function setMorph(fraction) {
-        console.log(fraction);
+        //console.log(fraction);
 
         text.end.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
         text.end.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
@@ -60,6 +75,12 @@
         text.start.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
         text.start.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
     }
-    setText('sds', 'Fdv');
-    setMorph(0.7);
+
+    setTextNotAnimated('Start text');
+    (async () => {
+        await setTextAnimated('new text!)', 1000);
+        await setTextAnimated('wery new text!!!', 1000);
+        await setTextAnimated('kek', 2000, 250);
+    })();
+    //setMorph(0.7);
 </script>
