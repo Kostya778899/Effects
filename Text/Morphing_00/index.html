@@ -1,36 +1,10 @@
 ﻿<style type="text/css">
-    @import url("https://fonts.googleapis.com/css?family=Raleway:900&display=swap");
-
-    /*body {
-        margin: 0px;
-    }*/
-
     #container {
-        position: absolute;
-        margin: auto;
-        width: 100vw;
-        height: 80pt;
-        top: 0;
-        bottom: 0;
-        filter: url(#threshold) blur(0.6px);
+        filter: url(#threshold) blur(0.1px);
     }
-    /*#text1, #text2 {
-        position: absolute;
-        width: 100%;
-        display: inline-block;
-        font-family: "Raleway", sans-serif;
-        font-size: 80pt;
-        text-align: center;
-        user-select: none;
-    }*/
     .text {
         position: absolute;
-        /*width: 100%;*/
-        /*display: inline-block;*/
-        /*font-family: "Raleway", sans-serif;*/
-        /*font-size: 80pt;*/
-        /*text-align: center;*/
-        /*user-select: none;*/
+        font-family: "Raleway", sans-serif;
     }
 
 </style>
@@ -54,12 +28,22 @@
             </filter>
         </defs>
     </svg>
+
+    <input type="range" min="0" max="5" value="1" step="0.1" class="slider" id="myRange" oninput="setMorphForce(value);" style="
+    width: 100%;
+    height: 15px;
+    "><input type="range" min="0" max="5" value="1" step="0.1" class="slider" id="myRange" oninput="setMinBlur(value);" style="
+    width: 100%;
+    height: 15px;
+    ">
 </body>
 <script>
+    const container = document.getElementById('container');
     var text = {
         start: document.getElementsByClassName('text start')[0],
         end: document.getElementsByClassName('text end')[0]
     };
+    var morphForce = 0.2;
 
 
     const lerp = (x, y, a) => x * (1 - a) + y * a
@@ -81,15 +65,16 @@
         text.start.textContent = value;
     }
 
-    function setMorph(fraction) {
-        //console.log(fraction);
+    function setMinBlur(value = 0.1) { container.style.filter = `url(#threshold) blur(${value}px)`; }
+    function setMorphForce(value) { morphForce = value; }
 
-        text.end.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text.end.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+    function setMorph(fraction) {
+        text.end.style.filter = `blur(${Math.min((8 * morphForce) / fraction - (8 * morphForce), 100)}px)`;
+        text.end.style.opacity = `${Math.pow(fraction, 0.4 * morphForce) * 100}%`;
 
         fraction = 1 - fraction;
-        text.start.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text.start.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text.start.style.filter = `blur(${Math.min((8 * morphForce) / fraction - (8 * morphForce), 100)}px)`;
+        text.start.style.opacity = `${Math.pow(fraction, 0.4 * morphForce) * 100}%`;
     }
 
 
@@ -97,7 +82,9 @@
     (async () => {
         for (var i = 0; i < 1000; i++) {
             await setTextAnimated('new text!)', 1000);
+            await sleep(1000);
             await setTextAnimated('wery new text!!!', 1000);
+            await sleep(1000);
         }
         return;
     })();
