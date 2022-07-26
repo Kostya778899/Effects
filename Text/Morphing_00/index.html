@@ -14,7 +14,7 @@
         bottom: 0;
         filter: url(#threshold) blur(0.6px);
     }
-    #text1, #text2 {
+    /*#text1, #text2 {
         position: absolute;
         width: 100%;
         display: inline-block;
@@ -22,6 +22,15 @@
         font-size: 80pt;
         text-align: center;
         user-select: none;
+    }*/
+    .text {
+        position: absolute;
+        /*width: 100%;*/
+        /*display: inline-block;*/
+        /*font-family: "Raleway", sans-serif;*/
+        /*font-size: 80pt;*/
+        /*text-align: center;*/
+        /*user-select: none;*/
     }
 
 </style>
@@ -31,8 +40,8 @@
         <span id="text2"></span>
     </div>-->
     <div id="container">
-        <p id="text1"></p>
-        <p id="text2"></p>
+        <p class="text start"></p>
+        <p class="text end"></p>
     </div>
 
     <svg id="filters">
@@ -47,7 +56,10 @@
     </svg>
 </body>
 <script>
-    var text = { start: document.getElementById("text1"), end: document.getElementById("text2")};
+    var text = {
+        start: document.getElementsByClassName('text start')[0],
+        end: document.getElementsByClassName('text end')[0]
+    };
 
 
     const lerp = (x, y, a) => x * (1 - a) + y * a
