@@ -77,8 +77,12 @@
     }
     function setMinBlur(value = 0.1) { container.style.filter = `url(#threshold) blur(${value}px)`; }
 
-    function setMorphSmooth(fraction, time, step = 10) {
-
+    async function setMorphSmooth(time, step = 10) {
+        const time = ;
+        for (var i = 0.; i < time; i += step) {
+            setMorph(invlerp(0., time, i));
+            await sleep(step);
+        }
     }
     function setMorph(fraction) {
         text.end.style.filter = `blur(${Math.min((8 * morphForce) / fraction - (8 * morphForce), 100)}px)`;
